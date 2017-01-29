@@ -1,0 +1,21 @@
+<template>
+  <require from="./folder"></require>
+  <require from="./file"></require>
+  <div class="folder">
+    <div css="padding-left:${paddingLeft()}px;cursor:pointer;" click.trigger="toggleExpand()">
+      <i class="fa ${collapsed ? 'fa-caret-right' : 'fa-caret-down'}" aria-hidden="true"></i>
+        <span>
+            ${folder.name}
+        </span>
+    </div>
+    <div if.bind="!collapsed">
+        <div repeat.for="child of folder.folders">
+            <folder folder.bind="child" level.bind="level+1"></folder>
+        </div>
+        <div repeat.for="file of folder.files">
+            <file file.bind="file" level.bind="level+1"></file>
+        </div>       
+    </div>
+</div>
+  
+</template>

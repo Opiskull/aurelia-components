@@ -1,0 +1,7 @@
+<template>
+  <div class="file ${isSelected ? 'selected' : ''}" click.trigger="toggleSelection()">
+    <span css="padding-left:${paddingLeft()}px;cursor:pointer;">
+        ${file.name}
+    </span>
+</div>
+</template>
