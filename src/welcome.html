@@ -27,7 +27,7 @@
 
    <color-picker color.bind="value2" is-open="true"></color-picker> ${value2}-->
 
-   <require from="./components/folder-view/folder-view"></require>
+   <require from="./components/image-view/image-view"></require>
 
-   <folder-view root.bind="rootFolder"></folder-view>
+   <image-view root.bind="rootFolder" selected-file.bind="selectedFile" on-upload-file.bind="uploadFile"></image-view>
 </template>

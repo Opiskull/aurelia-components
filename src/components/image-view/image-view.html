@@ -1,0 +1,26 @@
+<template>
+  <style>
+
+    .image-view {
+
+    }
+
+  </style>
+
+
+  <require from="../folder-view/folder-view"></require>
+
+  <folder-view root.bind="root" selected-file.bind="selectedFile" style="display: inline-block;"></folder-view>
+  <div style="display: inline-block;">
+    <label>Selected File</label>
+    <img if.bind="selectedFile.path" src.bind="selectedFile.path" ref="selectedImage">
+  </div>
+  <div class="">
+    Upload new File    
+    <label><input type="file" ref="file" name="uploadFile" style="display: none;" change.trigger="fileChanged($event)">
+    <span show.bind="fileName === ''">Choose a file</span>
+    <button show.bind="fileName !== ''" click.trigger="startFileUpload()">Upload</button>
+    ${fileName}
+    </label>
+  </div>
+</template>

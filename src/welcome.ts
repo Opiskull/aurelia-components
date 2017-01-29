@@ -21,27 +21,43 @@ export class Welcome {
   ]
 
   public createRootFolder(): Folder {
-    let rootFolder: Folder = new Folder();
-    rootFolder.name = "RootFolder";
-    rootFolder.path = "/";
-    let file1: File = new File();
-    file1.fullName = "/file1.txt";
-    file1.name = "file1.txt";
-    file1.path = "/file1.txt";
-    let file2: File = new File();
-    file2.fullName = "/file2.txt";
-    file2.name = "file2.txt";
-    file2.path = "/file2.txt";
-    let file3: File = new File();
-    file3.fullName = "/file3.txt";
-    file3.name = "file3.txt";
-    file3.path = "/file3.txt";
-    rootFolder.files = [file1, file2, file3];
-    let folder1: Folder = new Folder();
-    folder1.name = "folder1";
-    let folder2: Folder = new Folder();
-    folder2.name = "folder2";
+    let rootFolder: Folder = {
+      name: "RootFolder", path: "/"
+    }
+
+    let file1: File = {
+      fullName: "/file1.txt",
+      name: "file1.txt",
+      path: "/file1.txt"
+    }
+    let file2: File = {
+      fullName: "/file2.txt",
+      name: "file2.txt",
+      path: "/file2.txt"
+    }
+    let file3: File = {
+      fullName: "/folder1/file3.txt",
+      name: "file3.txt",
+      path: "/folder1/file3.txt"
+    }
+    let file4: File = {
+      fullName: "/folder1/file4.txt",
+      name: "file4.txt",
+      path: "/folder1/file4.txt"
+    }
+    rootFolder.files = [file1, file2];
+    let folder1: Folder = {
+      name: "folder1",
+      path: "/folder1",
+      files: []
+    }
+    let folder2: Folder = {
+      name: "folder2",
+      path: "/folder2",
+      files: []
+    }
     rootFolder.folders = [folder1, folder2];
+    folder1.files = [file3,file4];
     return rootFolder;
   }
 
@@ -49,6 +65,10 @@ export class Welcome {
 
 
   value: string = "blue";
+
+  uploadFile(arrayBuffer: ArrayBuffer){
+    console.log("uploadFile");
+  }
 
   //Getters can't be directly observed, so they must be dirty checked.
   //However, if you tell Aurelia the dependencies, it no longer needs to dirty check the property.
