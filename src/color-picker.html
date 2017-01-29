@@ -1,0 +1,65 @@
+<template>
+  <style>
+    .color {
+      position: absolute;
+      left:0;top:0;right:0;bottom:0;
+    }
+
+    .saturation {
+      position: absolute;
+      left:0;top:0;right:0;bottom:0;
+      background-image: linear-gradient(to right, #fff, rgba(204, 154, 129, 0));
+    }
+
+    .value {
+      position: absolute;
+      left:0;top:0;right:0;bottom:0;
+      background-image: linear-gradient(to top, #000, rgba(204, 154, 129, 0));
+    }
+
+    .SV {
+      position: relative;
+      width:200px;height:200px;
+      display: inline-block;
+    }
+
+    .H {
+      position:absolute;
+      display: inline-block;
+      width:25px;
+      height:200px;
+      background: linear-gradient(to top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    }
+
+    .SVSelector{
+      position: absolute;width:7px;height:7px;
+    }
+
+    .HSelector{
+      position:absolute;width:100%;height:7px;
+    }
+  </style>
+
+  <input type="text" name="colorPicker" ref="input" keypress.delegate="onEnter($event) & throttle:250" blur.trigger="onBlur($event)">
+
+  <button css="background-color: ${color};width:20px;height:20px;" click.trigger="open()"></button>
+
+  <div show.bind="isOpen">
+    <div class="SV" ref="SV" 
+    touchstart.delegate="SVStart($event)" 
+    mousedown.delegate="SVStart($event)">
+      <div class="color" ref="SVColor">
+        <div class="saturation">
+          <div class="value">
+            <div class="SVSelector" ref="SVSelector"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="H" ref="H"
+    touchstart.delegate="HStart($event)" 
+    mousedown.delegate="HStart($event)">
+      <div class="HSelector" ref="HSelector"></div>
+    </div>
+  </div>
+</template>
