@@ -1,0 +1,11 @@
+<template>
+    <div class="colorpicker">
+    <input type="text" name="colorPicker" ref="input" keypress.delegate="onEnter($event) & throttle:250" blur.trigger="onBlur($event)" click.trigger="toggle()">
+    <button css="background-color: ${color}" click.trigger="toggle()" class="open-picker"></button>
+    <div show.bind="isOpen" class="popout">
+      <div class="palette" repeat.for="row of rows">
+        <button click.trigger="selectColor(item)" css="background-color:${item}" repeat.for="item of row"></button>
+      </div>      
+    </div>
+  </div>
+</template>
