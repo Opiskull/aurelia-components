@@ -1,6 +1,6 @@
 import { BindingEngine } from 'aurelia-binding';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { bindable, DOM, inject, computedFrom, Disposable } from 'aurelia-framework';
+import { bindable, DOM, inject, computedFrom, Disposable, observable } from 'aurelia-framework';
 
 @inject(DOM.Element, BindingEngine, BindingSignaler)
 export class MultiSelect {
@@ -16,13 +16,16 @@ export class MultiSelect {
   @bindable() public filterItem: (item: any, filterText: string) => boolean = (item, filterText) => item.includes(filterText);
 
   @computedFrom("filterItemsQuery")
-  private get isDynamic(){
+  private get isDynamic() {
     return !!this.filterItemsQuery;
   }
 
-  private clickEvent: EventListenerOrEventListenerObject;
+  @observable() public filteredItems: any[] = [];
+
+  private clickToCloseEvent: EventListenerOrEventListenerObject;
   private selectedItemsChangedSubscription: Disposable;
   private filterTimeout: any;
+  private keyboardSelected: number = -1;
 
   constructor(private element: Element, private bindingEngine: BindingEngine, private bindingSignaler: BindingSignaler) {
   }
@@ -42,18 +45,61 @@ export class MultiSelect {
     }
   }
 
+  public filterTextKeyDown($event: KeyboardEvent) {
+    // Backspace
+    if ($event.keyCode === 8 && this.filterText == '') {
+      this.selectedItems.pop();
+    }
+    // ESC
+    if ($event.keyCode === 27) {
+      this.isOpen = false;
+      this.keyboardSelected = -1;
+    }
+    // Enter
+    if ($event.keyCode === 13) {
+      if (this.keyboardSelected !== -1) {
+        this.selectItem(this.filteredItems[this.keyboardSelected]);
+      }
+      this.keyboardSelected = -1;
+    }
+    // down 
+    if ($event.keyCode === 40) {
+      if (this.keyboardSelected !== -1) {
+        if (this.keyboardSelected >= (this.filteredItems.length - 1)) {
+          this.keyboardSelected = 0;
+        } else {
+          this.keyboardSelected++;
+        }
+      } else {
+        this.keyboardSelected = 0;
+      }
+      return false;
+    }
+    // up
+    if ($event.keyCode === 38) {
+      if (this.keyboardSelected !== -1) {
+        if (this.keyboardSelected === 0) {
+          this.keyboardSelected = this.filteredItems.length - 1;
+        } else {
+          this.keyboardSelected--;
+        }
+      } else {
+        this.keyboardSelected = this.filteredItems.length - 1;
+      }
+      return false;
+    }
+    return true;
+  }
+
   public filterTextChanged() {
     if (!this.isOpen) {
       this.isOpen = true;
     }
-
     this.callfilterItems();
   }
 
   private callfilterItems() {
     if (this.filterItemsQuery !== undefined) {
-      console.log("filterChanged")
-
       // debounce filter      
       if (this.filterTimeout) {
         clearTimeout(this.filterTimeout);
@@ -75,14 +121,14 @@ export class MultiSelect {
 
   public isOpenChanged(): void {
     if (this.isOpen) {
-      this.clickEvent = this.click.bind(this);
-      document.addEventListener("click", this.clickEvent, false);
+      this.clickToCloseEvent = this.clickToClose.bind(this);
+      document.addEventListener("click", this.clickToCloseEvent, false);
     } else {
-      document.removeEventListener("click", this.clickEvent, false);
+      document.removeEventListener("click", this.clickToCloseEvent, false);
     }
   }
 
-  click($event: MouseEvent): void {
+  clickToClose($event: MouseEvent): void {
     $event.stopPropagation();
     if (!this.element.contains(<HTMLElement>$event.target)) {
       this.isOpen = false;
@@ -94,8 +140,10 @@ export class MultiSelect {
   }
 
   public selectItem(item: any) {
-    if (this.selectedItems.includes(item)) {
-      let index = this.selectedItems.indexOf(item);
+    let selectedItems = this.selectedItems.map((selectedItem) => typeof (selectedItem) === 'object' ? JSON.stringify(selectedItem) : selectedItem);
+    let selectedItem = typeof (item) === 'object' ? JSON.stringify(item) : item;
+    if (selectedItems.includes(selectedItem)) {
+      let index = selectedItems.findIndex(item => selectedItem === item);
       if (index !== -1) {
         this.selectedItems.splice(index, 1);
       }

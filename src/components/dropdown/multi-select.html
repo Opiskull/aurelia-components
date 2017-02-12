@@ -1,5 +1,6 @@
 <template>
   <require from="./filter-value-converter"></require>
+  <require from="./filtered-items-value-converter"></require>
 <require from="./remove-selected-items-value-converter"></require>
 <require from="./display-value-value-converter"></require>
   <div class="dropdown multi-select">
@@ -7,12 +8,12 @@
       <span repeat.for="item of selectedItems">
         ${item | displayValue:displayItem} <i class="fa fa-close" click.trigger="selectItem(item)"></i>
       </span>
-      <input type="text" click.trigger="toggle()" value.bind="filterText">
+      <input type="text" click.trigger="toggle()" value.bind="filterText" keydown.trigger="filterTextKeyDown($event)">
     </label>
     <div show.bind="isOpen" class="dropdown-content">
       <span if.bind="isDynamic && filterText === ''">Input at least 3 characters to start a search</span>
-      <div repeat.for="item of items | removeSelectedItems:selectedItems:removeSelected | filter:filterText:filterItem & signal:'selected-items-changed'" 
-      click.trigger="selectItem(item)" class="${isSelected(item) ? 'selected' : ''}">
+      <div repeat.for="item of items | removeSelectedItems:selectedItems:removeSelected | filter:filterText:filterItem | filteredItems:filteredItems & signal:'selected-items-changed'" 
+      click.trigger="selectItem(item)" class="${isSelected(item) ? 'selected' : ''} ${$index === keyboardSelected ? 'keyboard' : ''}">
         ${item | displayValue:displayItem}
       </div>
     </div>
