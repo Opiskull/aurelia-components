@@ -1,0 +1,16 @@
+<template>
+<require from="./multi-select-value-converter"></require>
+  <div class="dropdown multi-select">
+    <label>      
+      <span repeat.for="selectedItem of selectedItems">
+        ${selectedItem} <i class="fa fa-close" click.trigger="selectItem(selectedItem)"></i>
+      </span>
+      <input type="text" click.trigger="toggle()" value.bind="filter">
+    </label>
+    <div show.bind="isOpen" class="dropdown-content">
+      <div repeat.for="item of items | multiSelect:selectedItems:filter:removeSelected & signal:'selected-items-changed'" click.trigger="selectItem(item)" class="${isSelected(item) ? 'selected' : ''}">
+        ${item}
+      </div>
+    </div>
+  </div>
+</template>
