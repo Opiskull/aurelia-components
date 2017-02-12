@@ -36,7 +36,8 @@ export class MultiSelect {
   }
 
   public attached() {
-    this.selectedItemsChangedSubscription = this.bindingEngine.collectionObserver(this.selectedItems).subscribe(() => this.bindingSignaler.signal("selected-items-changed"));
+    this.selectedItemsChangedSubscription = this.bindingEngine.collectionObserver(this.selectedItems)
+      .subscribe(() => this.bindingSignaler.signal("selected-items-changed"));
   }
 
   public detached() {
