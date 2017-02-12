@@ -1,0 +1,14 @@
+<template>
+<require from="./display-value-value-converter"></require>
+  <div class="dropdown">
+    <button click.trigger="toggle()">${selectedItem | displayValue:displayItem}</button>
+    <div click.trigger="toggle()" class="open-dropdown">
+      <i class="fa fa-angle-down" css="${isOpen ? 'transform: rotate(180deg);' : ''}"></i>
+    </div>
+    <div show.bind="isOpen" class="dropdown-content">
+      <div repeat.for="item of items" click.trigger="selectItem(item)" class="${item === selectedItem ? 'selected' : ''}">
+        ${item | displayValue:displayItem}
+      </div>
+    </div>
+  </div>
+</template>
