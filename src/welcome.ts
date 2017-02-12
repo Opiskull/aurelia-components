@@ -62,8 +62,21 @@ export class Welcome {
     return rootFolder;
   }
 
-  private colors = ["red","green","blue","black","#444444","#123123","#333111"];
+  private colors = ["red","green","blue","black","#444444","#123123","#333111","yellow","fuchsia","bb","filter","test", "blueer", "blu23","blugo"];
+
+  private objectColors = [{color:"red1"},{color:"2342"},{color:"rasdfasded1"},{color:"2ads23"},{color:"redssdf"},{color:"reasdf"},{color:"asfw3"}]
+  private promisedColors = Promise.resolve(this.colors);
   private selectedItems = [];
+  private selectedColors = [];
+  private selectedDynamicColors = [];
+
+  private displayItem = (item) => item.color;
+
+  private filterItems(fileText: string, selectedItems:any[]){
+    console.log("filterItems");
+    let promise = Promise.resolve(this.colors.filter(item => item.includes(fileText)));
+    return promise;
+  }
 
   rootFolder: Folder = this.createRootFolder();
 

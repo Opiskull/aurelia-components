@@ -20,18 +20,25 @@
 
   <require from="./notify-binding-behaviour"></require>
   <require from="./components/color-picker/color-palette-picker"></require>
-  <require from="./components/dropdown/simple-dropdown"></require>
-  <require from="./components/multi-select/multi-select"></require>
+  <require from="./components/dropdown/single-select"></require>
+  <require from="./components/dropdown/multi-select"></require>
 
   <color-palette-picker color.bind="value1" colors.bind="colors"></color-palette-picker>
    <color-picker color.bind="value2"></color-picker>
 
 
    <div style="height: 100px;">
-      <!--<simple-dropdown selected-item.bind="selectedItem" items.bind="colors"></simple-dropdown>-->
+      <single-select selected-item.bind="selectedItem" items.bind="colors"></single-select>
+
+      <single-select selected-item.bind="selectedColor" items.bind="objectColors" display-item.bind="displayItem"></single-select>
 
 
       <multi-select selected-items.bind="selectedItems" items.bind="colors"></multi-select>
+
+
+      <multi-select selected-items.bind="selectedDynamicColors" filter-items-query.call="filterItems(filterText,selectedItems)"></multi-select>
+
+      <multi-select selected-items.bind="selectedColors" items.bind="objectColors" display-item.bind="displayItem"></multi-select>
    </div>
 
   

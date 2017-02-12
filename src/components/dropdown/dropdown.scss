@@ -49,6 +49,7 @@ $primary_color: orange;
         max-height: 350px;
         width: 100%;
         z-index: 10;
+        overflow: auto;
         div {
             color: black;
             padding: 12px 16px;
@@ -63,13 +64,16 @@ $primary_color: orange;
         }
     }
     &.multi-select {
-        >label {
+        label {
             display: block;
-            border-bottom: 1px solid grey
-        }
-        input {
-            border: 0;
-            width: auto;
+            border-bottom: 1px solid grey;
+            input {
+                border: 0;
+                width: auto;
+                &:focus {
+                    outline: 0;
+                }
+            }
         }
     }
 }
