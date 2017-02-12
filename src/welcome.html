@@ -18,16 +18,21 @@
     </form>
   </section>
 
+  <require from="./notify-binding-behaviour"></require>
+  <require from="./components/color-picker/color-palette-picker"></require>
+  <require from="./components/dropdown/simple-dropdown"></require>
+  <require from="./components/multi-select/multi-select"></require>
+
+  <color-palette-picker color.bind="value1" colors.bind="colors"></color-palette-picker>
+   <color-picker color.bind="value2"></color-picker>
 
 
-  <!--<require from="./color-picker"></require>
+   <div style="height: 100px;">
+      <!--<simple-dropdown selected-item.bind="selectedItem" items.bind="colors"></simple-dropdown>-->
 
-  <color-picker color.bind="value1" is-open="true"></color-picker> ${value1}
 
+      <multi-select selected-items.bind="selectedItems" items.bind="colors"></multi-select>
+   </div>
 
-   <color-picker color.bind="value2" is-open="true"></color-picker> ${value2}-->
-
-   <require from="./components/image-view/image-view"></require>
-
-   <image-view root.bind="rootFolder" selected-file.bind="selectedFile" on-upload-file.bind="uploadFile"></image-view>
+  
 </template>

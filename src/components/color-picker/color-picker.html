@@ -1,0 +1,24 @@
+<template>
+  <div class="colorpicker">
+    <input type="text" name="colorPicker" ref="input" keypress.delegate="onEnter($event) & throttle:250" blur.trigger="onBlur($event)" click.trigger="toggle()">
+    <button css="background-color: ${color}" click.trigger="toggle()" class="open-picker"></button>
+    <div show.bind="isOpen" class="popout">
+      <div class="SV" ref="SV" 
+      touchstart.delegate="SVStart($event)" 
+      mousedown.delegate="SVStart($event)">
+        <div class="color" ref="SVColor">
+          <div class="saturation">
+            <div class="value">
+              <div class="SVSelector" ref="SVSelector"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="H" ref="H"
+      touchstart.delegate="HStart($event)" 
+      mousedown.delegate="HStart($event)">
+        <div class="HSelector" ref="HSelector"></div>
+      </div>
+    </div>
+  </div>
+</template>

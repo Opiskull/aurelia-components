@@ -1,9 +1,11 @@
 import { computedFrom } from 'aurelia-framework';
 import { EventAggregator, Subscription } from "aurelia-event-aggregator";
+import {BindingSignaler} from "aurelia-binding";
 export class Item {
   protected subscription: Subscription;
 
   constructor(protected eventAggregator: EventAggregator) {
+    let bindingSignaler: BindingSignaler;
 
   }
 

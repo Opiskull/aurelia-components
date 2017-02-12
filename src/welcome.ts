@@ -1,5 +1,6 @@
 import { Folder } from './models/common/folder';
 import { File } from './models/common/file';
+import * as tinycolor from "tinycolor2";
 //import {computedFrom} from 'aurelia-framework';
 
 export class Welcome {
@@ -61,6 +62,9 @@ export class Welcome {
     return rootFolder;
   }
 
+  private colors = ["red","green","blue","black","#444444","#123123","#333111"];
+  private selectedItems = [];
+
   rootFolder: Folder = this.createRootFolder();
 
 
@@ -88,6 +92,9 @@ export class Welcome {
     if (this.fullName !== this.previousValue) {
       return confirm('Are you sure you want to leave?');
     }
+  }
+
+  private bla:any = {
   }
 }
 

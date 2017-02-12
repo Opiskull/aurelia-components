@@ -1,9 +1,16 @@
-import tinycolor from "tinycolor2";
-import { bindable, bindingMode } from "aurelia-framework";
+import * as tinycolor from "tinycolor2";
+import { bindable, bindingMode, inject, DOM } from "aurelia-framework";
 
+import "./color-picker.scss"
+
+@inject(DOM.Element)
 export class ColorPicker {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) public color: string;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) public isOpen: boolean = false;
+
+  constructor(private element: Element) {
+
+  }
 
   private input: HTMLInputElement;
   private H: HTMLElement;
@@ -18,6 +25,7 @@ export class ColorPicker {
 
   private moveEvent: EventListenerOrEventListenerObject;
   private endEvent: EventListenerOrEventListenerObject;
+  private clickEvent: EventListenerOrEventListenerObject;
 
   debounce(func: Function): void {
     let state: any = {};
@@ -30,14 +38,14 @@ export class ColorPicker {
   public isOpenChanged(): void {
     // timeout is required as we read the clientHeight/Width and that is 0 when opening
     if (this.isOpen) {
-      this.register();
+      this.attachEvents();
     } else {
-      this.unregister();
+      this.detachEvents();
     }
     setTimeout(() => this.setColor(this.color));
   }
 
-  public open(): void {
+  public toggle(): void {
     this.isOpen = !this.isOpen;
   }
 
@@ -56,20 +64,23 @@ export class ColorPicker {
     this.setColor(this.input.value);
   }
 
-  register(): void {
+  attachEvents(): void {
     this.moveEvent = this.move.bind(this);
     this.endEvent = this.end.bind(this);
+    this.clickEvent = this.click.bind(this);
     document.addEventListener("mousemove", this.moveEvent, false);
     document.addEventListener("touchmove", this.moveEvent, false);
     document.addEventListener("touchend", this.endEvent, false);
     document.addEventListener("mouseup", this.endEvent, false);
+    document.addEventListener("click", this.clickEvent, false);
   }
 
-  unregister(): void {
+  detachEvents(): void {
     document.removeEventListener("mousemove", this.moveEvent, false);
     document.removeEventListener("touchmove", this.moveEvent, false);
     document.removeEventListener("touchend", this.endEvent, false);
     document.removeEventListener("mouseup", this.endEvent, false);
+    document.removeEventListener("click", this.clickEvent, false);
   }
 
   SVStart($event: MouseEvent | TouchEvent): void {
@@ -89,14 +100,19 @@ export class ColorPicker {
   move($event: TouchEvent | MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
-    // this.debounce(() => {
     if (this.draggingSV) {
       this.calculateSV($event);
     }
     if (this.draggingH) {
       this.calculateH($event);
     }
-    // });
+  }
+
+  click($event: MouseEvent): void {
+    $event.stopPropagation();
+    if(!this.element.contains(<HTMLElement>$event.target)){
+      this.isOpen = false;
+    }
   }
 
   end($event: Event): void {
@@ -108,8 +124,8 @@ export class ColorPicker {
     let SVWidth: number = this.SV.clientWidth;
     let SVHeight: number = this.SV.clientHeight;
     let o: Position = this.position(this.SV, $event);
-    let x: number = this.edge(o.x, 0, SVWidth);
-    let y: number = this.edge(o.y, 0, SVHeight);
+    let x: number = this.inRange(o.x, 0, SVWidth);
+    let y: number = this.inRange(o.y, 0, SVHeight);
     this.hsv.s = 1 - ((SVWidth - x) / SVWidth);
     this.hsv.v = (SVHeight - y) / SVHeight;
     this.setSVSelector(x, y);
@@ -118,7 +134,7 @@ export class ColorPicker {
 
   calculateH($event: TouchEvent | MouseEvent): void {
     let HHeight: number = this.H.clientHeight;
-    let y: number = this.edge(this.position(this.H, $event).y, 0, HHeight);
+    let y: number = this.inRange(this.position(this.H, $event).y, 0, HHeight);
     this.hsv.h = ((HHeight - y) / HHeight);
     this.setHSelector(y);
     this.setInputValue();
@@ -167,31 +183,26 @@ export class ColorPicker {
   }
 
   private position(element: Element, event: TouchEvent | MouseEvent): Position {
-    let x: number = !!(<TouchEvent>event).touches ? (<TouchEvent>event).touches[0].pageX : (<MouseEvent>event).pageX;
-    let y: number = !!(<TouchEvent>event).touches ? (<TouchEvent>event).touches[0].pageY : (<MouseEvent>event).pageY;
+    let x: number = !!(<TouchEvent>event).touches ? (<TouchEvent>event).touches[0].clientX : (<MouseEvent>event).clientX;
+    let y: number = !!(<TouchEvent>event).touches ? (<TouchEvent>event).touches[0].clientY : (<MouseEvent>event).clientY;
     let o: Offset = this.offset(<HTMLElement>element);
     return new Position(x - o.left, y - o.top);
   }
 
-  private edge(current: number, start: number, end: number): number {
-    if (current < start) { return start; }
-    if (current > end) { return end; }
+  private inRange(current: number, min: number, max: number): number {
+    if (current < min) { return min; }
+    if (current > max) { return max; }
     return current;
   }
 
   private offset(element: HTMLElement): Offset {
-    if (element === <any>window) {
-      return new Offset(window.pageXOffset || document.documentElement.scrollLeft,
-        window.pageYOffset || document.documentElement.scrollTop);
-    } else {
-      let left: number = element.offsetLeft;
-      let top: number = element.offsetTop;
-      while (element = <HTMLElement>element.offsetParent) {
-        left += element.offsetLeft;
-        top += element.offsetTop;
-      }
-      return new Offset(left, top);
-    }
+    let rect = element.getBoundingClientRect();
+    let x = rect.left;
+    let y = rect.top;
+    let doc = document.documentElement;
+    let xOffset = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+    let yOffset = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+    return new Offset(x + xOffset, y + yOffset);
   }
 }
 

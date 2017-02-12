@@ -1,0 +1,86 @@
+.colorpicker {
+    position: relative;
+    display: inline-block;
+    min-width: 100px;
+    width: 100%;
+    input {
+        background: transparent;
+        padding-top: 7px;
+        padding-bottom: 3px;
+        border: 0;
+        width: 100%;
+        border-bottom: grey thin solid;
+        font-size: 1rem;
+        resize: none;
+    }
+    button {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        &.open-picker {
+            position: absolute;
+            right: 3px;
+            bottom: 3px;
+        }
+    }
+    .popout {
+        position: absolute;
+        z-index: 10;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        background-color: white;
+        padding: 5px;
+        .SV {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            .color {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+            }
+            .saturation {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background-image: linear-gradient(to right, #fff, rgba(204, 154, 129, 0));
+            }
+            .value {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background-image: linear-gradient(to top, #000, rgba(204, 154, 129, 0));
+                cursor: crosshair;
+            }
+            .SVSelector {
+                position: absolute;
+                width: 5px;
+                height: 5px;
+            }
+        }
+        .H {
+            cursor: crosshair;
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 150px;
+            background: linear-gradient(to top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+            .HSelector {
+                position: absolute;
+                width: 100%;
+                height: 5px;
+            }
+        }
+        .palette {
+            button {
+                margin: 2px;
+            }
+        }
+    }
+}
