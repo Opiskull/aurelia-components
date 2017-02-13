@@ -1,10 +1,9 @@
-export * from './single-select';
-export * from './multi-select';
-export * from './filter-value-converter';
-export * from './filtered-items-value-converter';
-export * from './display-value-value-converter';
-export * from './remove-selected-items-value-converter';
-
+export * from "./single-select";
+export * from "./multi-select";
+export * from "./filter-value-converter";
+export * from "./filtered-items-value-converter";
+export * from "./display-value-value-converter";
+export * from "./remove-selected-items-value-converter";
 
 export function clickToClose(component: any) {
   component.clickToClose = ($event: MouseEvent): void => {
@@ -12,7 +11,7 @@ export function clickToClose(component: any) {
     if (!component.element.contains(<HTMLElement>$event.target)) {
       component.isOpen = false;
     }
-  }
+  };
 }
 
 export function isOpenChanged(component: any) {

@@ -1,6 +1,6 @@
-import { BindingEngine } from 'aurelia-binding';
-import { BindingSignaler } from 'aurelia-templating-resources';
-import { bindable, DOM, inject, computedFrom, Disposable, observable } from 'aurelia-framework';
+import { BindingEngine } from "aurelia-binding";
+import { BindingSignaler } from "aurelia-templating-resources";
+import { bindable, DOM, inject, computedFrom, Disposable, observable } from "aurelia-framework";
 
 @inject(DOM.Element, BindingEngine, BindingSignaler)
 export class MultiSelect {
@@ -36,8 +36,10 @@ export class MultiSelect {
   }
 
   public attached() {
-    this.selectedItemsChangedSubscription = this.bindingEngine.collectionObserver(this.selectedItems)
-      .subscribe(() => this.bindingSignaler.signal("selected-items-changed"));
+    if (this.selectedItems) {
+      this.selectedItemsChangedSubscription = this.bindingEngine.collectionObserver(this.selectedItems)
+        .subscribe(() => this.bindingSignaler.signal("selected-items-changed"));
+    }
   }
 
   public detached() {
@@ -46,9 +48,18 @@ export class MultiSelect {
     }
   }
 
+  private scrollIntoView() {
+    setTimeout(() => {
+      let keyboard = this.element.querySelector(".keyboard");
+      if (keyboard !== null) {
+        keyboard.scrollIntoView();
+      }
+    });
+  }
+
   public filterTextKeyDown($event: KeyboardEvent) {
     // Backspace
-    if ($event.keyCode === 8 && this.filterText == '') {
+    if ($event.keyCode === 8 && this.filterText === "") {
       this.selectedItems.pop();
     }
     // ESC
@@ -63,7 +74,7 @@ export class MultiSelect {
       }
       this.keyboardSelected = -1;
     }
-    // down 
+    // down
     if ($event.keyCode === 40) {
       if (this.keyboardSelected !== -1) {
         if (this.keyboardSelected >= (this.filteredItems.length - 1)) {
@@ -74,12 +85,13 @@ export class MultiSelect {
       } else {
         this.keyboardSelected = 0;
       }
+      this.scrollIntoView();
       return false;
     }
     // up
     if ($event.keyCode === 38) {
       if (this.keyboardSelected !== -1) {
-        if (this.keyboardSelected === 0) {
+        if (this.keyboardSelected <= 0) {
           this.keyboardSelected = this.filteredItems.length - 1;
         } else {
           this.keyboardSelected--;
@@ -87,6 +99,7 @@ export class MultiSelect {
       } else {
         this.keyboardSelected = this.filteredItems.length - 1;
       }
+      this.scrollIntoView();
       return false;
     }
     return true;
@@ -101,7 +114,7 @@ export class MultiSelect {
 
   private callfilterItems() {
     if (this.filterItemsQuery !== undefined) {
-      // debounce filter      
+      // debounce filter
       if (this.filterTimeout) {
         clearTimeout(this.filterTimeout);
       }
@@ -141,8 +154,8 @@ export class MultiSelect {
   }
 
   public selectItem(item: any) {
-    let selectedItems = this.selectedItems.map((selectedItem) => typeof (selectedItem) === 'object' ? JSON.stringify(selectedItem) : selectedItem);
-    let selectedItem = typeof (item) === 'object' ? JSON.stringify(item) : item;
+    let selectedItems = this.selectedItems.map((selectedItem) => typeof (selectedItem) === "object" ? JSON.stringify(selectedItem) : selectedItem);
+    let selectedItem = typeof (item) === "object" ? JSON.stringify(item) : item;
     if (selectedItems.includes(selectedItem)) {
       let index = selectedItems.findIndex(item => selectedItem === item);
       if (index !== -1) {
