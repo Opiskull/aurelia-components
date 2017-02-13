@@ -1,11 +1,11 @@
 import { BindingEngine } from "aurelia-binding";
 import { BindingSignaler } from "aurelia-templating-resources";
-import { bindable, DOM, inject, computedFrom, Disposable, observable } from "aurelia-framework";
+import { bindable, DOM, inject, computedFrom, Disposable, observable, bindingMode } from "aurelia-framework";
 
 @inject(DOM.Element, BindingEngine, BindingSignaler)
 export class MultiSelect {
   @bindable() public isOpen: boolean;
-  @bindable() public selectedItems: any[] = [];
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) public selectedItems: any[] = [];
   @bindable() public items: any[] = [];
   @bindable() public removeSelected: boolean = true;
   @bindable() public filterText: string = "";

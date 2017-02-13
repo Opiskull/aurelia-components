@@ -1,9 +1,9 @@
-import { inject, bindable, DOM } from 'aurelia-framework';
+import { inject, bindable, DOM, bindingMode } from "aurelia-framework";
 
 @inject(DOM.Element)
 export class SingleSelect {
   @bindable() public isOpen: boolean = false;
-  @bindable() public selectedItem: any;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) public selectedItem: any;
   @bindable() public items: any[];
   @bindable() public displayItem: (item: any) => string = (item) => item;
 
